@@ -1,0 +1,148 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/payout": {
+            "post": {
+                "description": "Takes desired currency and multiple item ids, generates payouts respecting the transaction limit, if limit is exceed generates multiple payouts",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payouts"
+                ],
+                "summary": "Creates Payouts for Sellers",
+                "parameters": [
+                    {
+                        "description": "Payout Details",
+                        "name": "payout",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CreatePayoutRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Success Response",
+                        "schema": {
+                            "$ref": "#/definitions/response.CreatePayoutResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "request.CreatePayoutRequest": {
+            "type": "object",
+            "properties": {
+                "currency": {
+                    "type": "string",
+                    "example": "USD"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "itemId1",
+                        "itemid2"
+                    ]
+                }
+            }
+        },
+        "response.BatchPayout": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "payouts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.Payout"
+                    }
+                },
+                "sales": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.Sale"
+                    }
+                },
+                "sellerReference": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.CreatePayoutResponse": {
+            "type": "object",
+            "properties": {
+                "batchPayouts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.BatchPayout"
+                    }
+                },
+                "currency": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.Payout": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.Sale": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "itemId": {
+                    "type": "string"
+                },
+                "originalCurrency": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                }
+            }
+        }
+    }
+}

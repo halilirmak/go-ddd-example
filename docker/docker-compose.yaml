@@ -1,0 +1,31 @@
+services:
+  vc-payout:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    environment:
+      GIN_MODE: release
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres
+    container_name: my_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DB_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+    volumes:
+      - vc_data:/var/lib/postgresql/data
+
+volumes:
+  vc_data:
