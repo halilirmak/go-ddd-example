@@ -1,4 +1,4 @@
-# vc-payout
+# go ddd example
 
 ## Overview
 
